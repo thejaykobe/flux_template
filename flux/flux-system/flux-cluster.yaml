@@ -1,0 +1,33 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: flux-cluster
+  namespace: flux-system
+spec:
+  interval: 1m
+  ref:
+    branch: main
+  url: "https://github.com/your-name/your-repo.git"
+  # secretRef:
+  #   name: basic-access-auth
+  ignore: |
+    # exclude all
+    /*
+    # include kubernetes directory
+    !/<the new folder name you made in git>
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: flux-cluster
+  namespace: flux-system
+spec:
+  interval: 1m
+  path: ./<the new folder name you made in git>/flux
+  prune: true
+  wait: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-cluster
+      
